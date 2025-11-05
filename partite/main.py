@@ -40,7 +40,7 @@ def main():
         else:
             negative.append((key, nome, cognome))
     for (nome, cognome) in inizio_not_found:
-        print(f'Errore: non trovata la data di inzio carriera di {nome} {cognome}')
+        print(f'Errore: non trovata la data di inizio carriera di {nome} {cognome}')
         
     for (key, nome, cognome) in negative:
         print(f'Errore: non corrisponde la data di aggiornamento per {nome} {cognome}')
@@ -51,12 +51,12 @@ def main():
     for key, (nome, cognome, data1, data2, partite, media) in giocatori.items():
         print(f'{nome} {cognome}: {media:.2f} partite/anno')
 
-    print('I 3 giocatori con la media più alta')
+    print('I 3 giocatori con la media più bassa')
     for key in increasing[0:3]:
         (nome, cognome, data1, data2, partite, media) = giocatori[key]
         print(f'{nome} {cognome}: {media:.2f} partite/anno')
-    print('I 3 giocatori con la media più bassa')
-    
+    print('I 3 giocatori con la media più alta')
+
     for key in decreasing[0:3]:
         (nome, cognome, data1, data2, partite, media) = giocatori[key]
         print(f'{nome} {cognome}: {media:.2f} partite/anno')
