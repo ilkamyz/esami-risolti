@@ -1,31 +1,34 @@
-﻿# Write your solution here, DO NOT START A NEW PROJECT
-# ATTENTION: if you create a new project, your exam paper will not be collected
-#            and you will be obliged to come in the subsequent exam session
-#
-# ATTENTION: on Win 10 (Italian keyboard) characters like [ ] { } have to be
-#            created using ALTgr+è (e.g. for [ ) and NOT CTRL-ALT-è
-#
-# ATTENTION: on macOS you have to use CTRL-C and CTRL-V inside the virtual
-#            machine and NOT command-C command-V
-#
-# if your keyboard is broken you can do copy/paste also with mouse
-# and you can copy special characters like [ ] { } < > here
-#
-# Scrivete qui la vostra soluzione, NON CREATE UN NUOVO PROGETTO
-# ATTENZIONE: se create un nuovo progetto il vostro compito non sara'
-#             raccolto correttamente e dovrete tornare all'appello successivo
-#
-# ATTENZIONE: su Win 10 (tastiera italiana) i caratteri speciali (es. { ) vanno
-#             scritti ad esempio con ALTgr+è (caso di [ ) e NON CTRL-ALT-è
-#
-# ATTENZIONE: su macOS vanno usati CRTL-C e CTRL-V per il copia incolla
-#                       nella macchina virtuale e NON command-C command-V
-#
-# se la vostra tastiera è guasta potete fare copia/incolla anche con il mouse
-# e per i caratteri speciali potete copiare da questi caratteri  [  ]  {  }  <  >
-# print(string.punctuation)
-## ! " # $ % & ' ( ) * + , - . / : ; < = > ? @ [ \ ] ^ _ ` { | } ~
+﻿def safe_get(m, r, c, default=0):
+    """Return m[r][c] if within bounds, else default."""
+    if 0 <= r < len(m) and 0 <= c < len(m[r]):
+        return m[r][c]
+    return default
 
+def getScore(row: int, col: int, mappa: list) -> int:
+    center = safe_get(mappa, row, col, 0)
+    score = 0
+    for i in (-1, 0, 1):
 
-print(open('mappa.txt', 'r').read())
-print()
+        score += center - safe_get(mappa, row - 1, col + i, 0)
+        score += center - safe_get(mappa, row + 1, col + i, 0)
+
+    score += (center - safe_get(mappa, row, col - 1, 0))
+    score += (center - safe_get(mappa, row, col + 1, 0))
+    return score
+
+def main():
+    with open('mappa.txt', 'r') as f:
+        mappa = [list(line.strip()) for line in f]
+    # convert chars to ints
+    for r in range(len(mappa)):
+        mappa[r] = [int(x) for x in mappa[r]]
+
+    scores = {}
+    for row in range(len(mappa)):
+        for col in range(len(mappa[row])):
+            scores[(col, row)] = getScore(row, col, mappa)
+    order = sorted(scores, key= lambda x: -scores[x])
+    for i, key in enumerate(order):
+        print(f'{i + 1:2d}. {key} : Valore =  {scores[key]}')
+if __name__ == '__main__':
+    main()
