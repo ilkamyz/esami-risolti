@@ -1,31 +1,25 @@
-﻿# Write your solution here, DO NOT START A NEW PROJECT
-# ATTENTION: if you create a new project, your exam paper will not be collected
-#            and you will be obliged to come in the subsequent exam session
-#
-# ATTENTION: on Win 10 (Italian keyboard) characters like [ ] { } have to be
-#            created using ALTgr+è (e.g. for [ ) and NOT CTRL-ALT-è
-#
-# ATTENTION: on macOS you have to use CTRL-C and CTRL-V inside the virtual
-#            machine and NOT command-C command-V
-#
-# if your keyboard is broken you can do copy/paste also with mouse
-# and you can copy special characters like [ ] { } < > here
-#
-# Scrivete qui la vostra soluzione, NON CREATE UN NUOVO PROGETTO
-# ATTENZIONE: se create un nuovo progetto il vostro compito non sara'
-#             raccolto correttamente e dovrete tornare all'appello successivo
-#
-# ATTENZIONE: su Win 10 (tastiera italiana) i caratteri speciali (es. { ) vanno
-#             scritti ad esempio con ALTgr+è (caso di [ ) e NON CTRL-ALT-è
-#
-# ATTENZIONE: su macOS vanno usati CRTL-C e CTRL-V per il copia incolla
-#                       nella macchina virtuale e NON command-C command-V
-#
-# se la vostra tastiera è guasta potete fare copia/incolla anche con il mouse
-# e per i caratteri speciali potete copiare da questi caratteri  [  ]  {  }  <  >
-# print(string.punctuation)
-## ! " # $ % & ' ( ) * + , - . / : ; < = > ? @ [ \ ] ^ _ ` { | } ~
+﻿from collections import defaultdict
+def main():
+    avvistamenti = {}
+    id = 1
+    with open('ufo_sightings.csv', 'r') as f:
+        for line in f:
+            line = line.strip().split(',')
+            avvistamenti[id] = (line[2], line[3], int(line[4]), line[5])#paese, forma, durata, desc
+            id += 1                                 
+
+    counter = defaultdict(int)
+    for id, (paese, forma, durata, desc) in avvistamenti.items():
+        counter[paese] += 1
+    
+    paeseMax = max(counter.keys(), key= lambda x: counter[x])
+    print(f'il paese con il maggior numero di avvistamenti è {paeseMax}')
+
+    maxLength = max(avvistamenti.keys(), key= lambda x: avvistamenti[x][2])
+    paese1, forma, durata, desc = avvistamenti[maxLength]
+    print(f"Avvistamento di durata più lunga: {desc} (Forma: {forma}, Durata: {durata})")
+if __name__ == '__main__':
+    main()
 
 
-print(open('ufo_sightings.csv', 'r').read())
-print()
+
