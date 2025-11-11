@@ -1,33 +1,54 @@
-﻿# Write your solution here, DO NOT START A NEW PROJECT
-# ATTENTION: if you create a new project, your exam paper will not be collected
-#            and you will be obliged to come in the subsequent exam session
-#
-# ATTENTION: on Win 10 (Italian keyboard) characters like [ ] { } have to be
-#            created using ALTgr+è (e.g. for [ ) and NOT CTRL-ALT-è
-#
-# ATTENTION: on macOS you have to use CTRL-C and CTRL-V inside the virtual
-#            machine and NOT command-C command-V
-#
-# if your keyboard is broken you can do copy/paste also with mouse
-# and you can copy special characters like [ ] { } < > here
-#
-# Scrivete qui la vostra soluzione, NON CREATE UN NUOVO PROGETTO
-# ATTENZIONE: se create un nuovo progetto il vostro compito non sara'
-#             raccolto correttamente e dovrete tornare all'appello successivo
-#
-# ATTENZIONE: su Win 10 (tastiera italiana) i caratteri speciali (es. { ) vanno
-#             scritti ad esempio con ALTgr+è (caso di [ ) e NON CTRL-ALT-è
-#
-# ATTENZIONE: su macOS vanno usati CRTL-C e CTRL-V per il copia incolla
-#                       nella macchina virtuale e NON command-C command-V
-#
-# se la vostra tastiera è guasta potete fare copia/incolla anche con il mouse
-# e per i caratteri speciali potete copiare da questi caratteri  [  ]  {  }  <  >
-# print(string.punctuation)
-## ! " # $ % & ' ( ) * + , - . / : ; < = > ? @ [ \ ] ^ _ ` { | } ~
+﻿'''I Valori restituiti dal codice non coincidono con l'esempio fornito, tuttavia non ho trovati errori di logica
+nel codice che ho scritto, non ho idea della causa di queste incongruenze'''
+from statistics import mean
+import csv
+def getRevenuePerSector(sector, companies, trades):
+    sectorCompanies = set()
+    returns = []
+    for symbol, sector0 in companies.items():
+        if sector0 == sector:
+            sectorCompanies.add(symbol)
+    
+    for company in iter(sectorCompanies):
+        firstClose = None
+        lastClose = None
+
+        for idx, (_, symbol, close) in trades.items():
+            if company == symbol:
+                firstClose = close
+                break
+
+        for idx in sorted(trades.keys(), reverse=True):
+            _, symbol, close = trades[idx]
+            if company == symbol:
+                lastClose = close
+                break
+
+        if firstClose is not None and lastClose is not None and firstClose != 0:
+            returns.append((lastClose - firstClose) / firstClose)
+
+    return sum(returns) / len(returns)
 
 
-print(open('sp500_companies.csv', 'r').read())
-print()
-print(open('sp500_historical.csv', 'r').read())
-print()
+def main():
+    companies = {}
+    with open('sp500_companies.csv', 'r') as f:
+        reader = csv.reader(f)
+        rows = list(reader)
+        for row in rows[1:]:
+            Exchange,Symbol,Shortname,Longname,Sector,Industry,Currentprice,Marketcap,Ebitda,Revenuegrowth,City,State,Country,Fulltimeemployees,Weight = row
+            companies[Symbol] = Sector
+    sectors = set(companies.values())
+    idx = 1
+    trades = {}
+    with open('sp500_historical.csv','r') as f:
+        next(f)
+        for line in f:
+            group = line.strip().split(',')
+            Date,Symbol,Close,High,Low,Open,Volume = group
+            trades[idx] = (Date, Symbol, float(Close))
+            idx += 1 
+    for sector in sectors:
+        print(f'Sector: {sector}, Average return: {getRevenuePerSector(sector,companies, trades)*100:.2f}%')
+if __name__ == '__main__':
+    main()
