@@ -1,33 +1,44 @@
-﻿# Write your solution here, DO NOT START A NEW PROJECT
-# ATTENTION: if you create a new project, your exam paper will not be collected
-#            and you will be obliged to come in the subsequent exam session
-#
-# ATTENTION: on Win 10 (Italian keyboard) characters like [ ] { } have to be
-#            created using ALTgr+è (e.g. for [ ) and NOT CTRL-ALT-è
-#
-# ATTENTION: on macOS you have to use CTRL-C and CTRL-V inside the virtual
-#            machine and NOT command-C command-V
-#
-# if your keyboard is broken you can do copy/paste also with mouse
-# and you can copy special characters like [ ] { } < > here
-#
-# Scrivete qui la vostra soluzione, NON CREATE UN NUOVO PROGETTO
-# ATTENZIONE: se create un nuovo progetto il vostro compito non sara'
-#             raccolto correttamente e dovrete tornare all'appello successivo
-#
-# ATTENZIONE: su Win 10 (tastiera italiana) i caratteri speciali (es. { ) vanno
-#             scritti ad esempio con ALTgr+è (caso di [ ) e NON CTRL-ALT-è
-#
-# ATTENZIONE: su macOS vanno usati CRTL-C e CTRL-V per il copia incolla
-#                       nella macchina virtuale e NON command-C command-V
-#
-# se la vostra tastiera è guasta potete fare copia/incolla anche con il mouse
-# e per i caratteri speciali potete copiare da questi caratteri  [  ]  {  }  <  >
-# print(string.punctuation)
-## ! " # $ % & ' ( ) * + , - . / : ; < = > ? @ [ \ ] ^ _ ` { | } ~
+import csv 
+def getMaxLength(output):
+    maxLen = max(output.keys(), key = lambda x: len(x))
+    return len(maxLen) + 1
+def main():
+    publications = {}
+    with open('PublicationData.csv','r') as f:
+        reader = csv.reader(f, delimiter=';')
+        for line in reader:
+            (idx, publisher, open_access, year) = line
+            open_access = open_access.lower() == 'true'
+            publications[idx] = (publisher, open_access, year)
 
+    fees = {}
+    with open ('publisher_fees.txt','r') as f:
+        for line in f:
+            group = line.strip().split(';')
+            fees[group[0]] = int(group[1])
 
-print(open('publisher_fees.txt', 'r').read())
-print()
-print(open('PublicationData.csv', 'r').read())
-print()
+    output = {}
+    for editor in fees.keys():
+        output[editor] = [0, 0]
+                        #articles, open source
+    for idx, (publisher, open_access, year) in publications.items():
+        output[publisher][0] += 1
+        if open_access:
+            output[publisher][1] += 1
+    
+    revenue = {}
+    for key, (_, a) in output.items():
+        revenue[key] = a * fees[key]
+
+    richest = max(revenue.keys(), key = lambda x: revenue[x])
+
+    print('Pubblicazioni per editore: ')
+    for editor, (articles, open_source) in output.items():
+        try:
+            print(f'{editor:<{getMaxLength(output)}}: {articles:>6} articoli,  {(open_source/articles) * 100:>.2f}% open source')
+        except ZeroDivisionError:
+            print(f'{editor:<{getMaxLength(output)}}: {articles:>6} articoli')
+    print()
+    print(f'Editore con costo massimo: {richest} ({revenue[richest]})')
+if __name__ == '__main__':
+    main()
