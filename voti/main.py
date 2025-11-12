@@ -24,18 +24,18 @@ primo_appello = readAppello('primo_appello.csv')
 secondo_appello = readAppello('secondo_appello.csv')
 joined_appelli = joinAppelli([primo_appello, secondo_appello])
 
-sorted_keys = sorted(joined_appelli.keys(),key = lambda x: float(joined_appelli[x][-1]), reverse= True)
+sorted_keys = sorted(joined_appelli.keys(),key = lambda x: (float(joined_appelli[x][2]), joined_appelli[x][1]))
 
 with open('sessione.csv', 'w') as f:
 
-    f.write('Nome,Cognome,Voto,Anno_di_Nascita,Media_Voti\n')
+    f.write('nome,cognome,voto,anno_nascita,media_esami_precedenti\n')
     for i in sorted_keys:
         nome, cognome, voto, anno, media_voti = joined_appelli[i]
-        f.write(f'{nome},{cognome},{anno},{voto},{media_voti}\n')
-    f.close()
+        f.write(f'{nome},{cognome},{voto},{anno},{media_voti}\n')
+    
 
 differenze = []
-for key in sorted_keys[:5]:
+for key in sorted_keys[-5:]:
     _, _, voto, _, media_voti = joined_appelli[key]
     differenze.append(float(voto) - float(media_voti))
 print(f'La media delle differenze tra voto e media nei primi 5 studenti è {mean(differenze):.2f}')
