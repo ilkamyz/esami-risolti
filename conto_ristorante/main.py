@@ -12,10 +12,14 @@
                 ordine[idx] += [nome, prezzo, iva]
     print('RICEVUTA')
     totale, totaleIva = 0, 0
-    for _, (quantity, nome, prezzo, iva) in ordine.items():
+
+    for _, (quantity, nome, prezzo, iva) in sorted(ordine.items(), key = lambda x: x[1][3]):
         print(f' {quantity}  {nome:<22} {quantity * prezzo:>5.2f} IVA {iva:>4.2f}%')
+
         totale += quantity * prezzo
-        totaleIva += quantity * prezzo * iva/100
+
+        totaleIva += quantity * (prezzo * iva / (100 + iva))
+        
     print(f'Totale: {totale:.2f}€')
     print(f'Di cui IVA: {totaleIva:.2f}€')
 
