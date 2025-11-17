@@ -95,7 +95,7 @@ Se non si trovano incantesimi (di attacco o difesa), l'output deve riportare la 
 130,Resurrezione,supporto,1,15
 ```
 
-#### Output (rispetto a questi files):
+#### Output (rispetto a questi files):  
 
 ```
 Bolla (drago, potenza = 14):
