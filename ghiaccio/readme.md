@@ -15,7 +15,7 @@ Il file `distanze.txt` contiene un elenco di tratte ferroviarie che si diramano 
 `<lettera identificativa della città di partenza>-<lettera identificativa della città di arrivo>:<numero intero indicante la distanza in km>`
 
 Ogni riga riporta, con lo stesso ordine, la tratta ferroviaria per raggiungere una nuova città del file `listino.txt`. Si assuma che:
-
+    
 - il percorso per raggiungere la città di partenza di ogni tratta sia sempre già stato descritto nelle righe precedenti;
 - esista un unico percorso (di uno o più tratte) per connettere Los Angeles ad ogni altra città.
 
