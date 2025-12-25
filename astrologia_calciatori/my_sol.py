@@ -24,10 +24,14 @@ def readSportivi(filename:str) -> dict:
 def getGoalsPerZodiac(sportivi: dict, zodiac: dict) -> dict:
     goalsPerZodiac = defaultdict(int)
     for nome, (goals, data) in sportivi.items():
+        found = False
         for segno, date in zodiac.items():
 
             if data in date:
                 goalsPerZodiac[segno] += goals
+                found = True
+        if not found:
+            goalsPerZodiac['Capricorno'] += goals
 
     return goalsPerZodiac
     
@@ -40,7 +44,7 @@ def main():
     asterisk = '*'
     
     for segno in sortedByGoals[::-1]:
-        print(f'{segno} ({goalsPerZodiac[segno]}) {asterisk * int(50 * (goalsPerZodiac[segno] / goalsPerZodiac[maxGoals]))}')
+        print(f'{segno:<10} ({goalsPerZodiac[segno]}) {asterisk * int(50 * (goalsPerZodiac[segno] / goalsPerZodiac[maxGoals]))}')
 
 if __name__ == '__main__':
     main()
